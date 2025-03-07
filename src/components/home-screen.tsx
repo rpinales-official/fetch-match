@@ -4,12 +4,15 @@ import { fetchDogBreeds } from '../services/breeds-api';
 import { searchDogs, getAllDogs } from '../services/search-api';
 import { fetchDogsByIds } from '../services/dogs-api';
 
+import { Box, Typography } from '@mui/material';
 import Search from './search';
-import { Box, Typography, CircularProgress } from '@mui/material';
+import Results from './results';
 
 interface HomeScreenProps { };
 
 function HomeScreen(props: HomeScreenProps): JSX.Element {
+    const { } = props;
+
     const [breeds, setBreeds] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
@@ -77,11 +80,7 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
                 onZipcodeChange={handleZipcodeChange}
                 onSearch={handleSearch} />
             {error && <Typography color="error">{error}</Typography>}
-            <Box sx={{ mt: 2 }}>
-                <Typography variant="h6">Results</Typography>
-                {loading && <CircularProgress />}
-                {error && <Typography color="error">{error}</Typography>}
-            </Box>
+            <Results dogs={dogs} loading={loading} />
         </Box>
     );
 };
