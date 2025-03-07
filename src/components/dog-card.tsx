@@ -4,6 +4,7 @@ import {
     CardMedia,
     CardContent,
     Typography,
+    Button,
 } from '@mui/material';
 
 interface DogCardProps {
@@ -12,6 +13,7 @@ interface DogCardProps {
     age: number;
     breed: string;
     zipCode: string;
+    onAddRemove: () => void;
 }
 
 function DogCard(props: DogCardProps): JSX.Element {
@@ -20,24 +22,31 @@ function DogCard(props: DogCardProps): JSX.Element {
         name,
         age,
         breed,
-        zipCode
+        zipCode,
+        onAddRemove,
     } = props;
 
     return (
         <Card sx={styles.card}>
             <CardMedia
                 component="img"
-                sx={{ width: 120, height: 120, borderRadius: 2, objectFit: 'cover' }}
+                sx={styles.cardMedia}
                 image={img}
                 alt={name}
             />
-            <CardContent sx={styles.CardContent}>
+            <CardContent sx={styles.cardContent}>
                 <Typography variant="h6" fontWeight="bold">
                     {name}
                 </Typography>
                 <Typography variant="body2">Age: {age}</Typography>
                 <Typography variant="body2">Breed: {breed}</Typography>
                 <Typography variant="body2">Zip Code: {zipCode}</Typography>
+                <Button
+                    sx={{ mt: 2 }}
+                    variant="outlined"
+                    onClick={onAddRemove}>
+                    Add/Remove
+                </Button>
             </CardContent>
         </Card>
     );
@@ -53,11 +62,17 @@ const styles = {
         p: 2,
         mb: 2
     },
-    CardContent: {
+    cardContent: {
         display: 'flex',
         flexDirection: 'column',
         ml: 2,
-    }
+    },
+    cardMedia: {
+        width: 120,
+        height: 120,
+        borderRadius: 2,
+        objectFit: 'cover',
+    },
 };
 
 export default DogCard;

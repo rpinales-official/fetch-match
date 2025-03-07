@@ -20,6 +20,7 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
     const [dogIds, setDogIds] = useState<string[]>([]);
     const [dogs, setDogs] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectedDogIds, setSelectedDogIds] = useState<string[]>([]);
 
     useEffect(() => {
         fetchDogBreeds()
@@ -70,6 +71,17 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
             });
     };
 
+    const handleAddRemoveDog = (dogId: string) => {
+        setSelectedDogIds((prevSelectedIds) => {
+            if (prevSelectedIds.includes(dogId)) {
+                return prevSelectedIds.filter((id) => id !== dogId);
+            } else {
+                return [...prevSelectedIds, dogId];
+            }
+        });
+    };
+
+
     return (
         <Box>
             <Search
@@ -80,7 +92,10 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
                 onZipcodeChange={handleZipcodeChange}
                 onSearch={handleSearch} />
             {error && <Typography color="error">{error}</Typography>}
-            <Results dogs={dogs} loading={loading} />
+            <Results
+                dogs={dogs}
+                loading={loading}
+                handleAddRemoveDog={handleAddRemoveDog}/>
         </Box>
     );
 };

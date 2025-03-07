@@ -15,15 +15,15 @@ export interface Dog {
 interface ResultsProps {
     dogs: Dog[];
     loading: boolean;
+    handleAddRemoveDog: (dogId: string) => void;
 }
 
 function Results(props: ResultsProps): JSX.Element {
     const {
         dogs,
         loading,
+        handleAddRemoveDog,
     } = props;
-
-    console.log("dogs", dogs);
 
     return (
         <Box>
@@ -37,6 +37,7 @@ function Results(props: ResultsProps): JSX.Element {
                     age={dog.age}
                     zipCode={dog.zip_code}
                     breed={dog.breed}
+                    onAddRemove={() => handleAddRemoveDog(dog.id)}
                 />
             ))}
         </Box>
