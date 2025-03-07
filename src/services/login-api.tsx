@@ -6,6 +6,7 @@ export const login = async (name: string, email: string) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ name, email }),
+            credentials: 'include',
         });
 
         if (!response.ok) {

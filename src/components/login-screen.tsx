@@ -1,7 +1,7 @@
 import React, { JSX, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { login } from '../services/api-service';
+import { login } from '../services/login-api';
 import { Box, TextField, Button, Typography } from '@mui/material';
 
 interface LoginScreenProps { };
