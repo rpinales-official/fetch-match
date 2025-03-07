@@ -16,9 +16,9 @@ export const login = async (name: string, email: string) => {
         // Check if the response has JSON content
         const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-            return await response.json(); // Parse as JSON
+            return await response.json();
         } else {
-            return await response.text(); // Parse as text
+            return await response.text();
         }
     } catch (error) {
         console.error('Error:', error);

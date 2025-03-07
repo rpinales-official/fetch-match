@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { JSX } from 'react';
 import {
     Select,
     MenuItem,
@@ -9,21 +9,36 @@ import {
     SelectChangeEvent,
     Box,
     TextField,
+    Button,
 } from '@mui/material';
 
 interface SearchProps {
     breeds: string[];
     selectedBreeds: string[];
     onSelectChange: (selected: string[]) => void;
+    zipCode: string;
+    onZipcodeChange: (zipcode: string) => void;
+    onSearch: () => void;
 }
 
-const Search: React.FC<SearchProps> = ({ breeds, selectedBreeds, onSelectChange }) => {
-    const [zipcode, setZipcode] = useState<string>('');
+function Search(props: SearchProps): JSX.Element {
+    const {
+        breeds,
+        selectedBreeds,
+        onSelectChange,
+        zipCode,
+        onZipcodeChange,
+        onSearch,
+    } = props;
 
-    const handleChange = (event: SelectChangeEvent<string[]>) => {
+    const handleBreedChange = (event: SelectChangeEvent<string[]>) => {
         const selectedBreeds = event.target.value as string[];
-        console.log('Selected breeds:', selectedBreeds);
         onSelectChange(selectedBreeds);
+    };
+
+    const handleZipcodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newZipcode = event.target.value;
+        onZipcodeChange(newZipcode);
     };
 
     return (
@@ -33,7 +48,7 @@ const Search: React.FC<SearchProps> = ({ breeds, selectedBreeds, onSelectChange 
                 <Select
                     multiple
                     value={selectedBreeds}
-                    onChange={handleChange}
+                    onChange={handleBreedChange}
                     renderValue={(selected) => (selected as string[]).join(', ')}
                     label="Select Dog Breeds">
                     {breeds.map((breed) => (
@@ -44,14 +59,17 @@ const Search: React.FC<SearchProps> = ({ breeds, selectedBreeds, onSelectChange 
                     ))}
                 </Select>
             </FormControl>
-            <Box sx={styles.zipcodeWraper}>
+            <Box sx={styles.zipcodeWrapper}>
                 <TextField
                     label="Enter Zipcode"
-                    value={zipcode}
-                    onChange={(e) => setZipcode(e.target.value)}
+                    value={zipCode}
+                    onChange={handleZipcodeChange}
                     variant="outlined"
                     fullWidth
                 />
+            </Box>
+            <Box sx={styles.searchButtonWrapper}>
+                <Button variant="contained" onClick={onSearch}>Search</Button>
             </Box>
         </Box>
 
@@ -65,9 +83,14 @@ const styles = {
         alignItems: 'center',
         gap: 2,
     },
-    zipcodeWraper: {
+    zipcodeWrapper: {
         display: 'flex',
         gap: 2,
+    },
+    searchButtonWrapper: {
+        marginTop: '16px',
+        display: 'flex',
+        justifyContent: 'center',
     },
 };
 
