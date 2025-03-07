@@ -2,6 +2,7 @@ import React, { JSX, useEffect, useState } from 'react';
 
 import { fetchDogBreeds } from '../services/breeds-api';
 import { searchDogs, getAllDogs } from '../services/search-api';
+import { fetchDogsByIds } from '../services/dogs-api';
 
 import Search from './search';
 import { Box, Typography, CircularProgress } from '@mui/material';
@@ -13,6 +14,7 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
     const [error, setError] = useState<string | null>(null);
     const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
     const [zipCode, setZipCode] = useState<string>('');
+    const [dogIds, setDogIds] = useState<string[]>([]);
     const [dogs, setDogs] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -41,15 +43,23 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
 
         const hasFilters = selectedBreeds.length > 0 || zipCode.trim() !== '';
 
-        const searchFunction = hasFilters ? () => searchDogs(selectedBreeds, [zipCode]) :
-            getAllDogs;
+        const searchFunction = hasFilters ? () => searchDogs(selectedBreeds, [zipCode]) : getAllDogs;
 
         searchFunction()
             .then((data) => {
-                setDogs(data.resultIds);
-                console.log(hasFilters ? 'Search results:' : 'All dogs:', data);
+                if (!data.resultIds || data.resultIds.length === 0) {
+                    setDogs([]);
+                    setDogIds([]);
+                    return Promise.reject('No dogs found.');
+                }
+                setDogIds(data.resultIds);
+                return fetchDogsByIds(data.resultIds);
             })
-            .catch(() => {
+            .then((dogDetails) => {
+                setDogs(dogDetails);
+            })
+            .catch((error) => {
+                console.error(error);
                 setError(`Failed to fetch ${hasFilters ? 'dogs' : 'all dogs'}. Please try again later.`);
             })
             .finally(() => {
@@ -69,18 +79,8 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
             {error && <Typography color="error">{error}</Typography>}
             <Box sx={{ mt: 2 }}>
                 <Typography variant="h6">Results</Typography>
-
-                {loading ? (
-                    <CircularProgress />
-                ) : error ? (
-                    <Typography color="error">{error}</Typography>
-                ) : (
-                    <ul>
-                        {dogs.map((dogId, index) => (
-                            <li key={index}>{dogId}</li>
-                        ))}
-                    </ul>
-                )}
+                {loading && <CircularProgress />}
+                {error && <Typography color="error">{error}</Typography>}
             </Box>
         </Box>
     );
