@@ -18,8 +18,8 @@ function LoginScreen(props: LoginScreenProps): JSX.Element {
     function handleLogin() {
         setError(null); // Reset error on new attempt
         login(name, email)
-            .then((response) => {
-                navigate('/home'); // Redirect to home on success
+            .then(() => {
+                navigate('/home');
             })
             .catch(() => {
                 setError('Login failed. Please try again.');
