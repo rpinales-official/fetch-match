@@ -1,13 +1,24 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import LoginScreen from './components/login-screen';
+import HomeScreen from './components/home-screen';
 
 function App() {
 	return (
-		<div className="App">
-			<LoginScreen />
-		</div>
+		<Router>
+			<Routes>
+				<Route path="/" element={<LoginScreen />} />
+				<Route path="/home" element={<HomeScreen />} />
+			</Routes>
+		</Router>
 	);
+}
+
+const styles = {
+	app: {
+		textAlign: "center",
+	},
 }
 
 export default App;
