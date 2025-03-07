@@ -1,4 +1,6 @@
 import React, { JSX, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { login } from '../services/api-service';
 import { Box, TextField, Button, Typography } from '@mui/material';
 
@@ -6,6 +8,8 @@ interface LoginScreenProps { };
 
 function LoginScreen(props: LoginScreenProps): JSX.Element {
     const { } = props;
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -15,8 +19,7 @@ function LoginScreen(props: LoginScreenProps): JSX.Element {
         setError(null); // Reset error on new attempt
         login(name, email)
             .then((response) => {
-                console.log('Response:', response);
-                // @TODO: If successful, navigate to the home screen
+                navigate('/home'); // Redirect to home on success
             })
             .catch(() => {
                 setError('Login failed. Please try again.');

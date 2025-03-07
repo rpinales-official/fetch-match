@@ -1,16 +1,21 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import LoginScreen from './components/login-screen';
-import { Box } from '@mui/material';
+import HomeScreen from './components/home-screen';
 
 function App() {
 	return (
-		<Box sx={styles.app}>
-			<LoginScreen />
-		</Box>
+		<Router>
+			<Routes>
+				<Route path="/" element={<LoginScreen />} />
+				<Route path="/home" element={<HomeScreen />} />
+			</Routes>
+		</Router>
 	);
 }
 
-const styles ={
+const styles = {
 	app: {
 		textAlign: "center",
 	},
