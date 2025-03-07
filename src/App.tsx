@@ -1,13 +1,19 @@
 import React from 'react';
-import './App.css';
 import LoginScreen from './components/login-screen';
+import { Box } from '@mui/material';
 
 function App() {
 	return (
-		<div className="App">
+		<Box sx={styles.app}>
 			<LoginScreen />
-		</div>
+		</Box>
 	);
+}
+
+const styles ={
+	app: {
+		textAlign: "center",
+	},
 }
 
 export default App;
