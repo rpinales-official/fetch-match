@@ -1,12 +1,14 @@
-import React, { JSX, useEffect, useState } from 'react';
+import React, { JSX, useEffect, useState, Fragment } from 'react';
 
 import { fetchDogBreeds } from '../services/breeds-api';
 import { searchDogs, getAllDogs } from '../services/search-api';
 import { fetchDogsByIds } from '../services/dogs-api';
+import { matchDogs } from '../services/match-api';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import Search from './search';
 import Results from './results';
+import DogCard from './dog-card';
 
 interface HomeScreenProps { };
 
@@ -21,6 +23,7 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
     const [dogs, setDogs] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedDogIds, setSelectedDogIds] = useState<string[]>([]);
+    const [matchedDogId, setMatchedDogId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchDogBreeds()
@@ -81,6 +84,28 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
         });
     };
 
+    const handleMatchDogs = () => {
+        if (selectedDogIds.length === 0) {
+            setError('Please select at least one dog to match.');
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        matchDogs(selectedDogIds)
+            .then((data) => {
+                setMatchedDogId(data.match);
+            })
+            .catch(() => {
+                setError('Failed to match dogs. Please try again later.');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
+    const matchedDog = dogs.find((dog) => dog.id === matchedDogId);
 
     return (
         <Box>
@@ -92,12 +117,39 @@ function HomeScreen(props: HomeScreenProps): JSX.Element {
                 onZipcodeChange={handleZipcodeChange}
                 onSearch={handleSearch} />
             {error && <Typography color="error">{error}</Typography>}
+            {dogs.length > 0 &&
+                <Box sx={styles.matchContainer}>
+                    <Button variant="contained" onClick={handleMatchDogs} disabled={loading}>
+                        Get a match
+                    </Button>
+                    {matchedDog &&
+                        <Fragment>
+                            <h1>Your Match!</h1>
+                            <DogCard
+                                key={matchedDog.id}
+                                img={matchedDog.img}
+                                name={matchedDog.name}
+                                age={matchedDog.age}
+                                zipCode={matchedDog.zip_code}
+                                breed={matchedDog.breed}
+                                onAddRemove={() => handleAddRemoveDog(matchedDog.id)}
+                                isSelected={selectedDogIds.includes(matchedDog.id)} />
+                        </Fragment>
+                    }
+                </Box>}
             <Results
                 dogs={dogs}
                 loading={loading}
-                handleAddRemoveDog={handleAddRemoveDog}/>
+                handleAddRemoveDog={handleAddRemoveDog}
+                selectedDogIds={selectedDogIds} />
         </Box>
     );
+};
+
+const styles = {
+    matchContainer: {
+        mt: 2,
+    }
 };
 
 export default HomeScreen;

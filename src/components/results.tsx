@@ -1,6 +1,6 @@
 import React, { JSX } from 'react';
 
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import DogCard from './dog-card';
 
 export interface Dog {
@@ -16,6 +16,7 @@ interface ResultsProps {
     dogs: Dog[];
     loading: boolean;
     handleAddRemoveDog: (dogId: string) => void;
+    selectedDogIds: string[];
 }
 
 function Results(props: ResultsProps): JSX.Element {
@@ -23,12 +24,14 @@ function Results(props: ResultsProps): JSX.Element {
         dogs,
         loading,
         handleAddRemoveDog,
+        selectedDogIds,
     } = props;
 
     return (
         <Box>
+            {dogs.length > 0 &&
+                <Typography variant="h4" fontWeight="bold">Available Dogs:</Typography>}
             {loading && <CircularProgress />}
-            <h1>Results Component</h1>
             {dogs.map((dog) => (
                 <DogCard
                     key={dog.id}
@@ -38,6 +41,7 @@ function Results(props: ResultsProps): JSX.Element {
                     zipCode={dog.zip_code}
                     breed={dog.breed}
                     onAddRemove={() => handleAddRemoveDog(dog.id)}
+                    isSelected={selectedDogIds.includes(dog.id)}
                 />
             ))}
         </Box>

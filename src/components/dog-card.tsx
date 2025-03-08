@@ -14,6 +14,7 @@ interface DogCardProps {
     breed: string;
     zipCode: string;
     onAddRemove: () => void;
+    isSelected: boolean;
 }
 
 function DogCard(props: DogCardProps): JSX.Element {
@@ -24,6 +25,7 @@ function DogCard(props: DogCardProps): JSX.Element {
         breed,
         zipCode,
         onAddRemove,
+        isSelected,
     } = props;
 
     return (
@@ -45,7 +47,7 @@ function DogCard(props: DogCardProps): JSX.Element {
                     sx={{ mt: 2 }}
                     variant="outlined"
                     onClick={onAddRemove}>
-                    Add/Remove
+                    {isSelected ? 'Remove from favorites' : 'Add from favorites'}
                 </Button>
             </CardContent>
         </Card>
