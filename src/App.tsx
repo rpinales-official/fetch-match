@@ -8,7 +8,7 @@ import { Box } from '@mui/material';
 function App() {
 	return (
 		<Box sx={styles.app}>
-			<Router>
+			<Router basename={process.env.PUBLIC_URL}>
 				<Routes>
 					<Route path="/" element={<LoginScreen />} />
 					<Route path="/home" element={<HomeScreen />} />
